@@ -1,2 +1,2 @@
 # 7daysOfCode
-7Days of Code From Alura
+7 Days of Code From Alura
