@@ -1,5 +1,10 @@
 package br.com.alura.dayscode.domain.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public class Item {
     public String id;
     public String rank;
