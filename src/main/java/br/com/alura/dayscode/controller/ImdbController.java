@@ -1,7 +1,7 @@
 package br.com.alura.dayscode.controller;
 
 import br.com.alura.dayscode.clients.ImdbClient;
-import br.com.alura.dayscode.domain.response.ImdbResponse;
+import br.com.alura.dayscode.domain.ListOfMovies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,12 @@ public class ImdbController {
     private ImdbClient imdbClient;
 
     @GetMapping("/top250")
-    public ResponseEntity<ImdbResponse> getTop250() {
+    public ResponseEntity<ListOfMovies> getTop250() {
 
-        ImdbResponse top250 = imdbClient.getTop250(apiKey);
+        ResponseEntity<ListOfMovies> top250 = imdbClient.getTop250(apiKey);
 
-        return ResponseEntity.ok(top250);
+        return top250;
     }
+
 
 }

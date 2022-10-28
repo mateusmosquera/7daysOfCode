@@ -1,7 +1,8 @@
 package br.com.alura.dayscode.clients;
 
-import br.com.alura.dayscode.domain.response.ImdbResponse;
+import br.com.alura.dayscode.domain.ListOfMovies;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ImdbClient {
 
     @GetMapping(value = "/{apiKey}")
-    ImdbResponse getTop250(@PathVariable(name = "apiKey") String apiKey);
+    ResponseEntity<ListOfMovies> getTop250(@PathVariable(name = "apiKey") String apiKey);
+
+
+
 
 }

@@ -1,7 +1,7 @@
 package br.com.alura.dayscode;
 
 import br.com.alura.dayscode.clients.ImdbClient;
-import br.com.alura.dayscode.domain.response.ImdbResponse;
+import br.com.alura.dayscode.domain.ListOfMovies;
 import com.netflix.loadbalancer.Server;
 import com.netflix.loadbalancer.ServerList;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import org.springframework.cloud.netflix.ribbon.StaticServerList;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,7 +32,7 @@ class ApplicationTests {
 	@Test
 	void shouldReturnTop250Films() {
 
-		ImdbResponse response = this.imdbClient.getTop250(apiKey);
+		ResponseEntity<ListOfMovies> response = this.imdbClient.getTop250(apiKey);
 
 		assertNotNull(response);
 	}
