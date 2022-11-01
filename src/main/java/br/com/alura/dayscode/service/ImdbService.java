@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class ImdbService {
@@ -18,7 +19,7 @@ public class ImdbService {
     private ImdbClient imdbClient;
 
     @GetMapping("/top250")
-    public ResponseEntity<ListOfMovies> getTop250()  {
+    public ListOfMovies getTop250()  {
 
         return imdbClient.getTop250(apiKey);
     }

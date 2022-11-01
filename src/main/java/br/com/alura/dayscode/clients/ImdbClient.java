@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ImdbClient {
 
     @GetMapping(value = "/{apiKey}")
-    ResponseEntity<ListOfMovies> getTop250(@PathVariable(name = "apiKey") String apiKey);
+    ListOfMovies getTop250(@PathVariable(name = "apiKey") String apiKey);
 
 
 

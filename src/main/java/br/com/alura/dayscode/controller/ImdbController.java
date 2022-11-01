@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Objects;
 
 @RestController
@@ -21,15 +23,23 @@ public class ImdbController {
     private ImdbService imdbService;
 
     @GetMapping("/top250")
-    public ResponseEntity<ListOfMovies> getTop250() throws FileNotFoundException {
+    public ResponseEntity<ListOfMovies> getTop250(@RequestParam(required = false, name = "title") String title) throws FileNotFoundException {
 
-        ResponseEntity<ListOfMovies> response = imdbService.getTop250();
+        ListOfMovies movies = new ListOfMovies(new ArrayList<>());
+
+        ListOfMovies response = imdbService.getTop250();
+
+        if (Objects.nonNull(title)){
+            movies.items().addAll( response.items().stream().filter(movie -> movie.title().contains(title)).toList());
+        }else{
+            movies = response;
+        }
 
         PrintWriter writer = new PrintWriter("src/main/resources/content.html");
-        new HTMLGenerator(writer).generate(Objects.requireNonNull(response.getBody()));
+        new HTMLGenerator(writer).generate(Objects.requireNonNull(movies));
         writer.close();
 
-        return response;
+        return ResponseEntity.ok().body(movies);
     }
 
 

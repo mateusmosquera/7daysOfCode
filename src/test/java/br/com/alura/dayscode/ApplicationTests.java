@@ -32,7 +32,7 @@ class ApplicationTests {
 	@Test
 	void shouldReturnTop250Films() {
 
-		ResponseEntity<ListOfMovies> response = this.imdbClient.getTop250(apiKey);
+		ListOfMovies response = this.imdbClient.getTop250(apiKey);
 
 		assertNotNull(response);
 	}
