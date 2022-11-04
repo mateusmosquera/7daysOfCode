@@ -41,7 +41,7 @@ public class ImdbController {
         public ResponseEntity<ListOfMovies> getTop250(@RequestParam(required = false, name = "title") String title) throws FileNotFoundException {
 
         movies.items().clear();
-        nm    
+
         ListOfMovies response = imdbService.getTop250();
 
         if (Objects.nonNull(title)){
