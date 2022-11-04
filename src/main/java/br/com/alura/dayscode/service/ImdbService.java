@@ -4,10 +4,10 @@ import br.com.alura.dayscode.clients.ImdbClient;
 import br.com.alura.dayscode.domain.ListOfMovies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
 
 @Service
 public class ImdbService {
@@ -18,10 +18,13 @@ public class ImdbService {
     @Autowired
     private ImdbClient imdbClient;
 
+    private ListOfMovies movies = new ListOfMovies(new ArrayList<>());
+
+    private ListOfMovies favoriteFilmsList = new ListOfMovies(new ArrayList<>());
+
     @GetMapping("/top250")
     public ListOfMovies getTop250()  {
 
         return imdbClient.getTop250(apiKey);
     }
-
 }

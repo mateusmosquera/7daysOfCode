@@ -1,61 +1,52 @@
 package br.com.alura.dayscode;
 
-import br.com.alura.dayscode.clients.ImdbClient;
+import br.com.alura.dayscode.controller.ImdbController;
 import br.com.alura.dayscode.domain.ListOfMovies;
-import com.netflix.loadbalancer.Server;
-import com.netflix.loadbalancer.ServerList;
+import br.com.alura.dayscode.exception.FilmIdNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.cloud.netflix.ribbon.RibbonClient;
-import org.springframework.cloud.netflix.ribbon.StaticServerList;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
-@SpringBootTest(classes = ApplicationTests.FeignConfig.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ApplicationTests {
 
 	@Autowired
-	private ImdbClient imdbClient;
+	private TestRestTemplate restTemplate;
 
-	@Value("${imdb.api.key}")
-	private String apiKey;
+	@LocalServerPort
+	private int port;
 
 	@Test
 	void shouldReturnTop250Films() {
 
-		ListOfMovies response = this.imdbClient.getTop250(apiKey);
+		ResponseEntity<ListOfMovies> response = this.restTemplate.getForEntity("http://localhost:" + port + "/imdb/top250", ListOfMovies.class);
 
-		assertNotNull(response);
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(response.getBody());
+		assertEquals(250, response.getBody().items().size());
 	}
 
+	@Test
+	void shouldSaveAFavoriteFilm(){
 
-	@EnableFeignClients(clients = ImdbClient.class)
-	@RestController
-	@Configuration
-	@EnableAutoConfiguration
-	@RibbonClient(name = "imdb", configuration = ApplicationTests.RibbonConfig.class)
-	static class FeignConfig {
-	}
+		String filmId = "tt0167260";
 
-	@Configuration
-	static class RibbonConfig {
+		ResponseEntity<String> response =
+				this.restTemplate.postForEntity("http://localhost:" + port + "/imdb/favorite/" + filmId,null, String.class);
 
-		@LocalServerPort
-		int port;
+		assertEquals(response.getStatusCode(), HttpStatus.OK);
+		assertEquals(ImdbController.FAVORITE_ADD_POST, response.getBody());
 
-		@Bean
-		public ServerList<Server> serverList() {
-			return new StaticServerList<>(new Server("127.0.0.1", port), new Server("127.0.0.1", port));
-		}
 	}
 
 }
