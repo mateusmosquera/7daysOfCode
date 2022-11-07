@@ -6,15 +6,12 @@ import br.com.alura.dayscode.domain.Movie;
 import br.com.alura.dayscode.exception.FilmIdNotFoundException;
 import br.com.alura.dayscode.service.ImdbService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
@@ -74,6 +71,18 @@ public class ImdbController {
             return ResponseEntity.ok().body(FAVORITE_ADD_POST);
         }
 
+    }
+
+    @GetMapping("/favorite")
+    public ResponseEntity<ListOfMovies> listFavoriteFilms() throws FileNotFoundException {
+
+        if (!favoriteFilmsList.items().isEmpty()) {
+            PrintWriter writer = new PrintWriter("src/main/resources/favoritos.html");
+            new HTMLGenerator(writer).generate(favoriteFilmsList);
+            writer.close();
+        }
+
+        return ResponseEntity.ok().body(favoriteFilmsList);
     }
 
 }
